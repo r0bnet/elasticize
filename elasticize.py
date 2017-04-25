@@ -3,6 +3,7 @@ import pymongo
 import sys
 import re
 import isodate
+import argparse
 from pymongo import MongoClient
 import json
 from datetime import datetime
@@ -22,14 +23,18 @@ def convert_date_strings_to_dates(obj):
 				obj[key] = isodate.parse_datetime(obj[key])
 		elif isinstance(obj[key], dict):
 			convert_date_strings_to_dates(obj[key])
+			
+parser = argparse.ArgumentParser()
+parser.add_argument('-f', '--filter', help='Filter for the MongoDB collection', type=str, default='{}', required=False)
+parser.add_argument('-o', '--outfile', help='File to write the number of documents which have been copied', default=None, type=str, required=False)
+args = parser.parse_args()
 
 collectionfilter = {};
-if len(sys.argv) > 1:
-	try:
-		collectionfilter = json.loads(sys.argv[1])
-	except:
-		print('Could not parse collection filter')
-		pass
+try:
+	collectionfilter = json.loads(args.filter)
+except:
+	print('Could not parse collection filter')
+	pass
 
 convert_date_strings_to_dates(collectionfilter)		
 
@@ -58,3 +63,7 @@ for n in range(0, collection.count()):
 
 print("{0} documents created, starting bulk inserting...").format(len(documents))
 helpers.bulk(es,documents, stats_only=True, request_timeout= 320)
+
+if args.outfile is not None:	
+	with open(args.outfile, 'wb') as fh:
+		fh.write(str(collection.count()))

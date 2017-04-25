@@ -24,14 +24,16 @@ Run
 Once the configuration is done, just run:
 
 ```python
-python elasticize.py [collectionfilter]
+python elasticize.py [-h] [-f FILTER] [-o OUTFILE]
 ```
 
-The collectionfilter must be a JSON object as string which will be applied when querying the source collection. It even works with dates. For example:
+The FILTER must be a JSON object as string which will be applied when querying the source collection. It even works with dates. For example:
 ```python
-python elasticize.py "{ \"timeUtc\": { \"$gt\": \"2017-03-24T10:41:18.887Z\" } }"
+python elasticize.py -f "{ \"timeUtc\": { \"$gt\": \"2017-03-24T10:41:18.887Z\" } }"
 ```
 When Elasticize detects an iso time string it will automatically convert it to a datetime object. This lets you bypass the ISODate() call within the JSON object.
+
+The OUTFILE can be a filename in which the total number of read and moved documents will be written. If it will be omitted no file will be created.
 
 Dependencies
 ------------
