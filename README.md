@@ -11,6 +11,11 @@ Use the config.json file to specify the source and destination of your data
 
 ```json
 {
+	"MONGO_HOST": "127.0.0.1",
+	"MONGO_PORT": "27017",
+	"MONGO_AUTH": false,
+	"MONGO_USER": "source_mongo_username",
+	"MONGO_PASSWORD": "source_mongo_password",
 	"MONGO_DATABASE": "source_mongo_db",
 	"MONGO_COLLECTION": "source_mongo_collection",
 	"ES_URL": "http://localhost:9200",
