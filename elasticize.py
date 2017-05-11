@@ -70,4 +70,4 @@ helpers.bulk(es,documents, stats_only=True, request_timeout= 320)
 
 if args.outfile is not None:	
 	with open(args.outfile, 'wb') as fh:
-		fh.write(str(collection.count()))
+		fh.write(str(len(documents)))
