@@ -4,6 +4,7 @@ import sys
 import re
 import isodate
 import argparse
+import urllib
 from pymongo import MongoClient
 import json
 from datetime import datetime
@@ -38,7 +39,9 @@ except:
 
 convert_date_strings_to_dates(collectionfilter)		
 
-connection = pymongo.MongoClient()
+connstr = 'mongodb://' + (config['MONGO_USER'] + ':' + urllib.quote_plus(config['MONGO_PASSWORD']) + '@' if config['MONGO_AUTH'] else '') + \
+	config['MONGO_HOST'] + ':' + config['MONGO_PORT'] + ('/' + config['MONGO_DATABASE'] if config ['MONGO_AUTH'] else '')
+connection = pymongo.MongoClient(connstr)
 db = connection[config['MONGO_DATABASE']]
 es = Elasticsearch(config['ES_URL'])
 
@@ -48,6 +51,7 @@ def outputJSON(obj):
 
 collection = db[config['MONGO_COLLECTION']].find(collectionfilter)
 documents = []
+print(collection.count())
 
 print("Creating documents...")
 for n in range(0, collection.count()):
